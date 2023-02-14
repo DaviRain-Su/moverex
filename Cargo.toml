@@ -1,0 +1,17 @@
+[package]
+name = "ethrex"
+version = "0.1.0"
+edition = "2021"
+authors = ["davirain.yin@gmail.com"]
+description = "在命令行中使用的 Ethereum 调试工具，可以帮助开发者调试和交互 Ethereum 区块链"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+toml = "0.7.2"
+anyhow = "1.0.69"
+ethers = "1.0.2"
+ethers-providers = "1.0.2"
+serde_json = "1.0.93"
+structopt = "0.3.26"
+tokio = { version = "1.25.0", features =["full"]}
