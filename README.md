@@ -1,3 +1,3 @@
-# ethrex
+# moverex
 
-在命令行中使用的 Ethereum 调试工具，可以帮助开发者调试和交互 Ethereum 区块链
+重新设计， 设计为支持Move语言的任何公链的调试工具。思路来源自这个项目: https://github.com/dyng/ramen

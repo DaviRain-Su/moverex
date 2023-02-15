@@ -1,5 +1,5 @@
-[ether]
-net_type="mainnet"
-rpc_endpoint="https://mainnet.infura.io/v3/c60b0bb42f8a4c6481ecd229eddaca27"
+[chain]
+net_type="aptos"
+rpc_endpoint="https://fullnode.mainnet.aptoslabs.com/v1"
 
 
