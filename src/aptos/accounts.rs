@@ -8,7 +8,7 @@ use aptos_api_types::{AccountData, MoveModuleBytecode, MoveResource};
 use super::{core_get, AptosClient};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct GetAccountRequest {
+pub struct Account {
     /// Address of account with or without a 0x prefix
     ///
     /// Example: 0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1
@@ -21,15 +21,15 @@ pub struct GetAccountRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     ledger_version: Option<u64>,
 }
-impl GetAccountRequest {
-    pub fn new(address: String) -> GetAccountRequest {
+impl Account {
+    pub fn new(address: String) -> Self {
         Self {
             address,
             ledger_version: None,
         }
     }
 }
-impl Display for GetAccountRequest {
+impl Display for Account {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "/accounts/{}", self.address)?;
         if let Some(ledger_version) = self.ledger_version {
@@ -40,7 +40,7 @@ impl Display for GetAccountRequest {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct GetAccountResourcesRequest {
+pub struct AccountResources {
     /// Address of account with or without a 0x prefix
     ///
     /// Example: 0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1
@@ -63,7 +63,7 @@ pub struct GetAccountResourcesRequest {
     start: Option<String>,
 }
 
-impl GetAccountResourcesRequest {
+impl AccountResources {
     pub fn new(address: String) -> Self {
         Self {
             address,
@@ -74,7 +74,7 @@ impl GetAccountResourcesRequest {
     }
 }
 
-impl Display for GetAccountResourcesRequest {
+impl Display for AccountResources {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut url = format!("/accounts/{}/resources", self.address);
 
@@ -103,7 +103,7 @@ impl Display for GetAccountResourcesRequest {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct GetAccountModulesRequest {
+pub struct AccountModules {
     /// Address of account with or without a 0x prefix
     ///
     /// Example: 0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1
@@ -126,7 +126,7 @@ pub struct GetAccountModulesRequest {
     start: Option<String>,
 }
 
-impl Display for GetAccountModulesRequest {
+impl Display for AccountModules {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut url = format!("/accounts/{}/modules", self.address);
 
@@ -155,14 +155,14 @@ impl Display for GetAccountModulesRequest {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct GetAccountResourceRequest {
+pub struct AccountResource {
     /// Address of account with or without a 0x prefix
     /// Example: 0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1
     address: String,
     /// Name of struct to retrieve e.g. 0x1::account::Account
     ///
     /// Example: 0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>
-    /// 
+    ///
     /// Match pattern: ^0x[0-9a-zA-Z:_<>]+$
     resource_type: String,
     /// Ledger version to get state of account
@@ -173,7 +173,7 @@ pub struct GetAccountResourceRequest {
     ledger_version: Option<u64>,
 }
 
-impl Display for GetAccountResourceRequest {
+impl Display for AccountResource {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
@@ -188,7 +188,7 @@ impl Display for GetAccountResourceRequest {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct GetAccountModuleRequest {
+pub struct AccountModule {
     /// Address of account with or without a 0x prefix
     /// Example: 0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1
     address: String,
@@ -202,7 +202,7 @@ pub struct GetAccountModuleRequest {
     ledger_version: Option<u64>,
 }
 
-impl Display for GetAccountModuleRequest {
+impl Display for AccountModule {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "/accounts/{}/module/{}", self.address, self.module_name)?;
         if let Some(ledger_version) = self.ledger_version {
@@ -219,7 +219,7 @@ impl AptosClient {
     /// If the ledger version is not specified in the request, the latest ledger version is used.
     pub async fn get_account(
         &self,
-        request: GetAccountRequest,
+        request: Account,
         config: Config,
     ) -> anyhow::Result<AccountData> {
         core_get(request, &config.rpc_endpoint).await
@@ -229,11 +229,10 @@ impl AptosClient {
     /// The Aptos nodes prune account state history, via a configurable time window. If the requested ledger version has been pruned, the server responds with a 410.
     pub async fn get_account_resources(
         &self,
-        request: GetAccountResourcesRequest,
+        request: AccountResources,
         config: Config,
     ) -> anyhow::Result<Vec<MoveResource>> {
-        core_get::<GetAccountResourcesRequest, Vec<MoveResource>>(request, &config.rpc_endpoint)
-            .await
+        core_get::<AccountResources, Vec<MoveResource>>(request, &config.rpc_endpoint).await
     }
 
     /// Retrieves all account modules' bytecode for a given account at a specific ledger version. If the ledger version is not specified in the request, the latest ledger version is used.
@@ -241,11 +240,10 @@ impl AptosClient {
     /// The Aptos nodes prune account state history, via a configurable time window. If the requested ledger version has been pruned, the server responds with a 410.
     pub async fn get_account_modules(
         &self,
-        request: GetAccountModulesRequest,
+        request: AccountModules,
         config: Config,
     ) -> anyhow::Result<Vec<MoveModuleBytecode>> {
-        core_get::<GetAccountModulesRequest, Vec<MoveModuleBytecode>>(request, &config.rpc_endpoint)
-            .await
+        core_get::<AccountModules, Vec<MoveModuleBytecode>>(request, &config.rpc_endpoint).await
     }
 
     /// Retrieves an individual resource from a given account and at a specific ledger version. If the ledger version is not specified in the request, the latest ledger version is used.
@@ -253,10 +251,10 @@ impl AptosClient {
     /// The Aptos nodes prune account state history, via a configurable time window. If the requested ledger version has been pruned, the server responds with a 410.
     pub async fn get_account_resource(
         &self,
-        request: GetAccountResourceRequest,
+        request: AccountResource,
         config: Config,
     ) -> anyhow::Result<MoveResource> {
-        core_get::<GetAccountResourceRequest, MoveResource>(request, &config.rpc_endpoint).await
+        core_get::<AccountResource, MoveResource>(request, &config.rpc_endpoint).await
     }
 
     /// Retrieves an individual module from a given account and at a specific ledger version. If the ledger version is not specified in the request, the latest ledger version is used.
@@ -264,17 +262,17 @@ impl AptosClient {
     /// The Aptos nodes prune account state history, via a configurable time window. If the requested ledger version has been pruned, the server responds with a 410.
     pub async fn get_account_module(
         &self,
-        request: GetAccountModuleRequest,
+        request: AccountModule,
         config: Config,
     ) -> anyhow::Result<MoveModuleBytecode> {
-        core_get::<GetAccountModuleRequest, MoveModuleBytecode>(request, &config.rpc_endpoint).await
+        core_get::<AccountModule, MoveModuleBytecode>(request, &config.rpc_endpoint).await
     }
 }
 
 #[tokio::test]
 async fn test_get_account() {
     let config = Config::default_config();
-    let request = GetAccountRequest {
+    let request = Account {
         address: "0xaf8d8689e3d980e46bab36a7a0e99f1bd23618ab3c7b4109d81fed57671c837d".to_string(),
         ledger_version: Some(87798277),
     };
@@ -289,7 +287,7 @@ async fn test_get_account() {
 #[tokio::test]
 async fn test_get_account_resources() {
     let config = Config::default_config();
-    let request = GetAccountResourcesRequest {
+    let request = AccountResources {
         address: "0xaf8d8689e3d980e46bab36a7a0e99f1bd23618ab3c7b4109d81fed57671c837d".to_string(),
         ledger_version: Some(87798277),
         limit: None,
@@ -306,7 +304,7 @@ async fn test_get_account_resources() {
 #[tokio::test]
 async fn test_get_account_modules() {
     let config = Config::default_config();
-    let request = GetAccountModulesRequest {
+    let request = AccountModules {
         address: "0xaf8d8689e3d980e46bab36a7a0e99f1bd23618ab3c7b4109d81fed57671c837d".to_string(),
         ledger_version: None,
         limit: None,
@@ -323,7 +321,7 @@ async fn test_get_account_modules() {
 #[tokio::test]
 async fn test_get_account_source() {
     let config = Config::default_config();
-    let request = GetAccountResourceRequest {
+    let request = AccountResource {
         address: "0xaf8d8689e3d980e46bab36a7a0e99f1bd23618ab3c7b4109d81fed57671c837d".to_string(),
         resource_type: "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>".to_string(),
         ledger_version: None,

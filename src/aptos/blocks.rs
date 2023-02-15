@@ -1,4 +1,3 @@
-
 use std::fmt::{self, Display};
 
 use serde::{Deserialize, Serialize};
@@ -13,7 +12,7 @@ use super::{core_get, AptosClient};
 pub struct BlocksByHeight {
     block_height: u64,
     /// If set to true, include all transactions in the block
-    /// 
+    ///
     ///If not provided, no transactions will be retrieved
     with_transactions: Option<bool>,
 }
@@ -28,13 +27,12 @@ impl Display for BlocksByHeight {
     }
 }
 
-
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BlocksByVersion {
     /// Ledger version to lookup block information for.
     version: u64,
     /// If set to true, include all transactions in the block
-    /// 
+    ///
     ///If not provided, no transactions will be retrieved
     with_transactions: Option<bool>,
 }
@@ -51,21 +49,29 @@ impl Display for BlocksByVersion {
 
 impl AptosClient {
     /// This endpoint allows you to get the transactions in a block and the corresponding block information.
-    /// 
+    ///
     /// Transactions are limited by max default transactions size. If not all transactions are present, the user will need to query for the rest of the transactions via the get transactions API.
-    /// 
+    ///
     /// If the block is pruned, it will return a 410
-    pub async fn get_blocks_by_height(&self, request: BlocksByHeight, config: Config) -> anyhow::Result<Block> {
-        core_get::<BlocksByHeight, Block>(request,&config.rpc_endpoint).await
+    pub async fn get_blocks_by_height(
+        &self,
+        request: BlocksByHeight,
+        config: Config,
+    ) -> anyhow::Result<Block> {
+        core_get::<BlocksByHeight, Block>(request, &config.rpc_endpoint).await
     }
 
     ///This endpoint allows you to get the transactions in a block and the corresponding block information given a version in the block.
-    /// 
+    ///
     /// Transactions are limited by max default transactions size. If not all transactions are present, the user will need to query for the rest of the transactions via the get transactions API.
-    /// 
+    ///
     /// If the block has been pruned, it will return a 410
-    pub async fn get_blocks_by_version(&self, request: BlocksByVersion, config: Config) -> anyhow::Result<Block> {
-        core_get::<BlocksByVersion, Block>(request,&config.rpc_endpoint).await
+    pub async fn get_blocks_by_version(
+        &self,
+        request: BlocksByVersion,
+        config: Config,
+    ) -> anyhow::Result<Block> {
+        core_get::<BlocksByVersion, Block>(request, &config.rpc_endpoint).await
     }
 }
 
