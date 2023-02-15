@@ -58,7 +58,7 @@ impl AptosClient {
         request: BlocksByHeight,
         config: Config,
     ) -> anyhow::Result<Block> {
-        core_get::<BlocksByHeight, Block>(request, &config.rpc_endpoint).await
+        core_get::<BlocksByHeight, Block>(request, &config.main_rpc_endpoint).await
     }
 
     ///This endpoint allows you to get the transactions in a block and the corresponding block information given a version in the block.
@@ -71,7 +71,7 @@ impl AptosClient {
         request: BlocksByVersion,
         config: Config,
     ) -> anyhow::Result<Block> {
-        core_get::<BlocksByVersion, Block>(request, &config.rpc_endpoint).await
+        core_get::<BlocksByVersion, Block>(request, &config.main_rpc_endpoint).await
     }
 }
 

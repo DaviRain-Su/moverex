@@ -222,7 +222,7 @@ impl AptosClient {
         request: Account,
         config: Config,
     ) -> anyhow::Result<AccountData> {
-        core_get(request, &config.rpc_endpoint).await
+        core_get(request, &config.main_rpc_endpoint).await
     }
 
     /// Retrieves all account resources for a given account and a specific ledger version. If the ledger version is not specified in the request, the latest ledger version is used.
@@ -232,7 +232,7 @@ impl AptosClient {
         request: AccountResources,
         config: Config,
     ) -> anyhow::Result<Vec<MoveResource>> {
-        core_get::<AccountResources, Vec<MoveResource>>(request, &config.rpc_endpoint).await
+        core_get::<AccountResources, Vec<MoveResource>>(request, &config.main_rpc_endpoint).await
     }
 
     /// Retrieves all account modules' bytecode for a given account at a specific ledger version. If the ledger version is not specified in the request, the latest ledger version is used.
@@ -243,7 +243,8 @@ impl AptosClient {
         request: AccountModules,
         config: Config,
     ) -> anyhow::Result<Vec<MoveModuleBytecode>> {
-        core_get::<AccountModules, Vec<MoveModuleBytecode>>(request, &config.rpc_endpoint).await
+        core_get::<AccountModules, Vec<MoveModuleBytecode>>(request, &config.main_rpc_endpoint)
+            .await
     }
 
     /// Retrieves an individual resource from a given account and at a specific ledger version. If the ledger version is not specified in the request, the latest ledger version is used.
@@ -254,7 +255,7 @@ impl AptosClient {
         request: AccountResource,
         config: Config,
     ) -> anyhow::Result<MoveResource> {
-        core_get::<AccountResource, MoveResource>(request, &config.rpc_endpoint).await
+        core_get::<AccountResource, MoveResource>(request, &config.main_rpc_endpoint).await
     }
 
     /// Retrieves an individual module from a given account and at a specific ledger version. If the ledger version is not specified in the request, the latest ledger version is used.
@@ -265,7 +266,7 @@ impl AptosClient {
         request: AccountModule,
         config: Config,
     ) -> anyhow::Result<MoveModuleBytecode> {
-        core_get::<AccountModule, MoveModuleBytecode>(request, &config.rpc_endpoint).await
+        core_get::<AccountModule, MoveModuleBytecode>(request, &config.main_rpc_endpoint).await
     }
 }
 

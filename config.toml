@@ -1,5 +1,6 @@
 [chain]
 net_type="aptos"
-rpc_endpoint="https://fullnode.mainnet.aptoslabs.com/v1"
-
+main_rpc_endpoint="https://fullnode.mainnet.aptoslabs.com/v1"
+test_rpc_endpoint="https://fullnode.testnet.aptoslabs.com/v1"
+dev_rpc_endpoint="https://fullnode.devnet.aptoslabs.com/v1"
 

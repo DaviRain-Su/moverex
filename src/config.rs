@@ -4,14 +4,18 @@ use toml::Value;
 #[derive(Debug, Clone)]
 pub struct Config {
     pub net_type: String,
-    pub rpc_endpoint: String,
+    pub main_rpc_endpoint: String,
+    pub test_rpc_endpoint: String,
+    pub dev_rpc_endpoint: String,
 }
 
 impl Config {
-    pub fn new(net_type: String, rpc_endpoint: String) -> Config {
+    pub fn new(net_type: String, main_rpc_endpoint: String) -> Config {
         Self {
             net_type,
-            rpc_endpoint,
+            main_rpc_endpoint,
+            test_rpc_endpoint: Default::default(),
+            dev_rpc_endpoint: Default::default(),
         }
     }
 
@@ -22,11 +26,22 @@ impl Config {
         let net_type = config["chain"]["net_type"]
             .as_str()
             .expect("Missing NET type in config file");
-        let rpc_endpoint = config["chain"]["rpc_endpoint"]
+        let main_rpc_endpoint = config["chain"]["main_rpc_endpoint"]
+            .as_str()
+            .expect("Missing rpc_endpoint in config file");
+        let test_rpc_endpoint = config["chain"]["test_rpc_endpoint"]
+            .as_str()
+            .expect("Missing rpc_endpoint in config file");
+        let dev_rpc_endpoint = config["chain"]["dev_rpc_endpoint"]
             .as_str()
             .expect("Missing rpc_endpoint in config file");
 
-        Config::new(net_type.into(), rpc_endpoint.into())
+        Config {
+            net_type: net_type.into(),
+            main_rpc_endpoint: main_rpc_endpoint.into(),
+            test_rpc_endpoint: test_rpc_endpoint.into(),
+            dev_rpc_endpoint: dev_rpc_endpoint.into(),
+        }
     }
 
     pub fn default_config() -> Config {
