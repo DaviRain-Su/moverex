@@ -1,4 +1,6 @@
 pub mod accounts;
+pub mod blocks;
+
 use std::fmt::Display;
 
 use serde::de::DeserializeOwned;
